@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+        
+    <!-- 引入properties -->
+    <context:property-placeholder location="classpath:database.properties"/>
+    <!-- 开启包扫描，并注册注解，扫描@Service,@Controller,@Repository,.... -->
+    <!-- 在base-package后定义的包中扫描(这里是action，和lib包，两个包都在src/main/java包下) -->
+    <context:component-scan base-package="action,lib"/>
+
+    <!-- 配置数据源 -->
+    <bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${jdbc.driver}">
+		</property>
+		<property name="url" value="${jdbc.url}">
+		</property>
+		<property name="username" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+    
+    <!-- 配置hibernate sessionfactory -->
+    <bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<!-- <value>lib/Account.hbm.xml</value> -->
+			</list>
+		</property>
+		<!-- Scan entities automatically 自动扫描实体类Entity,在value后的包中扫描(这里是lib包) -->
+		<property name="packagesToScan" value="lib"/>
+	</bean>
+
+</beans>

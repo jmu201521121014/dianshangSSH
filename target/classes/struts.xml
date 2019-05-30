@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+ "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+	<constant name="struts.objectFactory" value="spring"></constant>
+    <constant name="struts.enable.DynamicMethodInvocation" value="true" />
+    
+	<package name="a" namespace="/" extends="struts-default">
+		
+		<!-- 配置自定义拦截器 -->
+		<interceptors>
+			<interceptor name="myIntercepte" class="action.LoginInterceptor"></interceptor>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="myIntercepte"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		<!-- 使表单通过（action的name属性）!方法名.action访问 指定action中的方法-->
+		<global-allowed-methods>regex:.*</global-allowed-methods>
+
+		<!-- 登入的Action --><!-- class中Action类前面的是包名 -->
+		<action name="Login" class="action.LoginAction">
+			<!-- LoginAction返回fail说明是登入失败，跳转到LoginFail.jsp -->
+			<result name="fail" type="redirect">/LoginFail.jsp</result>
+			<result name="success">/LoginSuccess.jsp</result>
+			<result name="input">/Login.jsp</result>
+		</action>
+		
+		<!-- 登入成功后判断应该显示管理员页面还是用户登入后进入的商品界面 -->
+		<action name="showLoginRes" class="action.showLoginRes">
+			<!-- 给该Action配置拦截器，使还没登入用户无法跳转页面 -->
+			<interceptor-ref name="myStack"></interceptor-ref>
+			<!-- LoginAction返回admin说明是管理员登入，跳转到管理员界面 -->
+			<result name="admin">/admin.jsp</result>
+			<!-- LoginAction返回user说明是普通用户登入，跳转到商品界面 -->
+			<result name="user">/NewGood.jsp</result>
+			<!-- 返回Login,返回登入页面 -->
+			<result name="Login">/Login.jsp</result>
+		</action>
+		
+		<!-- 注册的Action -->
+		<action name="Register" class="action.RegisterAction">
+			<!-- Register放回success说明注册成功，跳转到登入页面 -->
+			<result name="success">/RegisterSuccess.jsp</result>
+			<!-- RegisterFail返回fail说明注册失败进入注册失败页面RegisterFail.jsp -->
+			<result name="fail">/RegisterFail.jsp</result>
+		</action>
+		
+		<!-- 更换头像的Action -->
+		<action name="changeHead" class="action.changeHead">
+			<!-- 头像保存路径 -->
+			<param name="savePath">/head</param>
+			<!-- 文件上传拦截器 -->
+			<interceptor-ref name="fileUpload">
+				<!-- 配置允许上传的文件类型 -->
+				<param name="alloweTypes">image/png,image/gif,image/jpeg</param>
+				<!-- 配置允许上传的文件大小，为50000字节 -->
+				<param name="maximumSize">50000</param>
+			</interceptor-ref>
+			<!-- 配置系统默认拦截器 -->
+			<interceptor-ref name="defaultStack"/>
+			<result name="success">/changeHeadSucc.jsp</result>
+			<result name="fail">/changeHeadFail.jsp</result>
+			<result name="input">/changeHeadFail.jsp</result>
+		</action>
+		<!-- 加入购物车逻辑操作Action -->
+		<action name="addCart" class="action.addCartAction">
+			<result name="res">/addCartRes.jsp</result>
+		</action>
+		<!-- 从购物车中删除商品操作 -->
+		<action name="deleteFromCartAction" class="action.deleteFromCartAction">
+			<result name="res">/deleteFromCartRes.jsp</result>
+		</action>
+		<!-- 查找商品操作Action -->
+		<action name="SearchGood" class="action.SearchGoodAction">
+			<result name="res">/SearchGoodRes.jsp</result>
+		</action>
+		
+
+		<!-- 管理员对用户进行管理的Action,里面有三种方法分别进行增删改,userManager*进行方法的通配,jsp中通过action名!方法名访问 -->
+		<action name="userManage*" class="action.userManageAction">
+			<result name="res">/userManageRes.jsp</result>
+		</action>
+		
+		<!-- 管理员对商品进行管理的Action,里面有三种方法分别进行增删改,goodManager*进行方法的通配 ,jsp中通过action名!方法名访问 -->
+		<action name="goodManage*" class="action.goodManageAction">
+			<result name="res">/goodManageRes.jsp</result>
+		</action>
+			
+	</package>
+</struts>
