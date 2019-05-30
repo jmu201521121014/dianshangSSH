@@ -1,4 +1,4 @@
-package action;
+﻿package action;
 
 import java.util.*;
 
@@ -25,6 +25,7 @@ public class deleteFromCartAction extends ActionSupport {
 		return goodsDao;
 	}
 	public void setGoodsDao(GoodsDao goodsDao) {
+		int b;
 		this.goodsDao = goodsDao;
 	}
 	

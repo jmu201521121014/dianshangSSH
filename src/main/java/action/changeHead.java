@@ -38,6 +38,7 @@ public class changeHead extends ActionSupport {
 	@Autowired
 	private UserDao userDao;
 	public UserDao getUserDao() {
+		int a;
 		return userDao;
 	}
 	public void setUserDao(UserDao userDao) {
