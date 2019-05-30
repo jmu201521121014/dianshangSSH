@@ -1,4 +1,4 @@
-package action;
+﻿package action;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +38,7 @@ public class changeHead extends ActionSupport {
 	@Autowired
 	private UserDao userDao;
 	public UserDao getUserDao() {
-		int a;
+		//int a;
 		return userDao;
 	}
 	public void setUserDao(UserDao userDao) {
