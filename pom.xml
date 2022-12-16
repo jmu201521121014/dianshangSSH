@@ -4,7 +4,7 @@
   <artifactId>dianshangSSH</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <properties>
-  	<spring.version>4.3.14.RELEASE</spring.version>
+  	<spring.version>5.2.20.RELEASE</spring.version>
   	<struts.version>2.5.16</struts.version>
   </properties>
   <dependencies>
